@@ -1,11 +1,20 @@
 require 'rexml/document'
+require 'nokogiri'
+require 'open-uri'
 
 module CpscData
   extend Importer
 
   def self.import_from_xml_feed(url)
     begin
-      REXML::Document.new(Net::HTTP.get(URI(url))).elements.each('message/results/result') do |element|
+
+       cpsc_api = REXML::Document.new(Net::HTTP.get(URI(url)))
+      
+        rss_url = "http://www.cpsc.gov/en/Newsroom/CPSC-RSS-Feed/Recalls-RSS/"
+        rss_doc = Nokogiri::XML(open(rss_url)).remove_namespaces!
+
+       
+       cpsc_api.elements.each('message/results/result') do |element|   
         recall_number = element.attributes['recallNo']
 
         Recall.transaction do
@@ -14,14 +23,32 @@ module CpscData
           recall.recalled_on = Date.parse(element.attributes['recDate']) rescue nil
           recall_url = element.attributes['recallURL'].strip
           recall.url = get_cpsc_url(recall_number, URI(recall_url)) || recall_url
+          descrip = element.attributes['prname']
+          
+# Search the CPSC RSS feed to see if recall url exists,  if so grab Title, Description, and Thumbnail link
+          mtch = rss_doc.search "[text()*='#{recall.url}']"
+          mtch_url = mtch.first
+
+           if defined? mtch_url
+              addtitle = mtch_url.parent.xpath("title").text
+              adddescription = mtch_url.parent.xpath("description").text 
+              addimage = "http://www.cpsc.gov" + mtch_url.parent.xpath('./group/content')[0]['url'] # must add domain prefix
+               if defined? adddescription
+                 descrip = adddescription
+              end
+           end  
+           
+
 
           attributes = {
               manufacturer: element.attributes['manufacturer'],
               product_type: element.attributes['type'],
-              description: element.attributes['prname'],
+              description: descrip,
               upc: element.attributes['UPC'],
               hazard: element.attributes['hazard'],
-              country: element.attributes['country_mfg']
+              country: element.attributes['country_mfg'],
+              title: addtitle,
+              image: addimage       
           }
 
           Recall::CPSC_DETAIL_TYPES.each do |detail_type|
