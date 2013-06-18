@@ -15,7 +15,7 @@ class Recall < ActiveRecord::Base
 
   CDC_HIGHLIGHTED_FIELDS = %w(summary description).freeze
 
-  CPSC_DETAIL_TYPES = %w(Manufacturer ProductType Description UPC Hazard Country).freeze
+  CPSC_DETAIL_TYPES = %w(Manufacturer ProductType Description UPC Hazard Country Title Image).freeze
   CPSC_FULL_TEXT_SEARCH_FIELDS = %w(Manufacturer ProductType Description Hazard Country).freeze
   CPSC_HIGHLIGHTED_FIELDS = [:description, :hazard].freeze
 
