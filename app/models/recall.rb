@@ -53,11 +53,11 @@ class Recall < ActiveRecord::Base
     integer :recall_year do |recall|
       recall.recalled_on.year unless recall.recalled_on.blank?
     end
-
+=begin
     string :upc, multiple: true, as: 'upc_sm_ci' do
       recall_details_hash[:upc] unless recall_details_hash[:upc].blank?
     end
-
+=end
     CPSC_FULL_TEXT_SEARCH_FIELDS.each do |detail_type|
       key = detail_type.underscore.to_sym
       text key, stored: true do
