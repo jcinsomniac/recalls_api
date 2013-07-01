@@ -105,7 +105,7 @@ describe Recall do
 
       before do
         recall.should_receive(:recall_url).and_return('http://some.url.to/cpsc')
-        recall.should_receive(:recall_details_hash).exactly(6).times.
+        recall.should_receive(:recall_details_hash).exactly(8).times.
             and_return(recall_details_hash)
       end
 
