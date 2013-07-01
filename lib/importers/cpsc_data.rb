@@ -39,25 +39,34 @@ module CpscData
 	      image: image      
           }
 
-          Recall::CPSC_DETAIL_TYPES.each do |detail_type|
-            detail_value = attributes[detail_type.underscore.to_sym]
-            next if detail_value.blank?
+	  process_recall(recall,attributes)
 
-            if recall.new_record?
-              recall.recall_details << RecallDetail.new(detail_type: detail_type,
-                                                        detail_value: detail_value)
-            else
-              recall.recall_details.where(detail_type: detail_type,
-                                          detail_value: StringSanitizer.sanitize(detail_value)).first_or_create!
-            end
-          end
-          recall.save!
+
         end
       end
     rescue => e
       Rails.logger.error(e.message)
     end
   end
+
+  def self.process_recall(recall,attributes)
+
+          Recall::CPSC_DETAIL_TYPES.each do |detail_type|
+            detail_value = attributes[detail_type.underscore.to_sym]
+            next if detail_value.blank?
+
+            if recall.new_record?
+              recall.recall_details << RecallDetail.new(detail_type: detail_type,
+               detail_value: detail_value)
+            else
+              recall.recall_details.where(detail_type: detail_type,
+              detail_value: StringSanitizer.sanitize(detail_value)).first_or_create!
+            end
+          end
+          recall.save!
+
+  end
+
 
   def self.get_cpsc_url(recall_number, recall_url)
     cpsc_url = get_url_from_redirect(URI(recall_url))
@@ -69,4 +78,5 @@ module CpscData
     end
     cpsc_url
   end
+
 end
