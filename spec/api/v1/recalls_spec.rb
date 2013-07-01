@@ -1,4 +1,4 @@
-# coding: utf-8
+﻿# coding: utf-8
 require 'spec_helper'
 require 'nokogiri'
 
@@ -162,10 +162,12 @@ describe 'Recalls API V1' do
                          recall_url: 'http://www.cpsc.gov/en/Recalls/2010/Crate-and-Barrel-Recalls-Glass-Water-Bottles-Due-to-Laceration-Hazard/',
                          manufacturers: ['Crate & Barrel'],
                          product_types: ['Bottles (Sports/Water/Thermos)'],
+			 titles: nil,
                          descriptions: ['Glass Water Bottles'],
                          upcs: %w(AA987654321 BB876543219),
                          hazards: %w(Laceration),
-                         countries: %w(China) }
+                         countries: %w(China),
+			 images: nil }
 
         item = recent_hash[:success][:results][4]
         item.should == { organization: 'CPSC',
@@ -174,10 +176,12 @@ describe 'Recalls API V1' do
                          recall_url: 'http://www.cpsc.gov/en/Recalls/2010/Violation-of-Federal-Mattress-Flammability-Standard-Prompts-Recall-of-Ottoman-Bed-Mattresses-by-PBteen/',
                          manufacturers: ['Acme Corp'],
                          product_types: ['Dangerous Stuff'],
+			 titles: nil,
                          descriptions: ['Baby Stroller can be dangerous to children'],
                          upcs: %w(0123456789),
                          hazards: ['Horrible Choking'],
-                         countries: ['United States'] }
+                         countries: ['United States'],
+			 images: nil }
 
         item = recent_hash[:success][:results][5]
         item.should == {
@@ -380,10 +384,12 @@ describe 'Recalls API V1' do
                            recall_url: 'http://www.cpsc.gov/en/Recalls/2010/Violation-of-Federal-Mattress-Flammability-Standard-Prompts-Recall-of-Ottoman-Bed-Mattresses-by-PBteen/',
                            manufacturers: ['Acme Corp'],
                            product_types: ['Dangerous Stuff'],
+			   titles: nil,
                            descriptions: ['Baby Stroller can be dangerous to children'],
                            upcs: %w(0123456789),
                            hazards: ['Horrible Choking'],
-                           countries: ['United States'] }
+                           countries: ['United States'],
+			   images: nil }
         end
       end
 
@@ -401,10 +407,12 @@ describe 'Recalls API V1' do
                            recall_url: 'http://www.cpsc.gov/en/Recalls/2010/Violation-of-Federal-Mattress-Flammability-Standard-Prompts-Recall-of-Ottoman-Bed-Mattresses-by-PBteen/',
                            manufacturers: ['Acme Corp'],
                            product_types: ['Dangerous Stuff'],
+			   titles: nil,
                            descriptions: ["Baby \uE000Stroller\uE001 can be dangerous to children"],
                            upcs: %w(0123456789),
                            hazards: ["\uE000Horrible\uE001 Choking"],
-                           countries: ['United States'] }
+                           countries: ['United States'],
+			   images: nil }
         end
       end
 
