@@ -214,10 +214,12 @@ class Recall < ActiveRecord::Base
   def cpsc_hash
     { manufacturers: recall_details_hash[:manufacturer],
       product_types: recall_details_hash[:product_type],
+      titles: recall_details_hash[:title],
       descriptions: recall_details_hash[:description],
       upcs: recall_details_hash[:upc],
       hazards: recall_details_hash[:hazard],
-      countries: recall_details_hash[:country] }
+      countries: recall_details_hash[:country],
+      images: recall_details_hash[:image] }
   end
 
   def nhtsa_hash
