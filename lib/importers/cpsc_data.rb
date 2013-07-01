@@ -8,8 +8,8 @@ module CpscData
   def self.import_from_xml_feed(url)
     begin
 
-       cpsc_api = REXML::Document.new(Net::HTTP.get(URI(url)))
-       cpsc_api.elements.each('message/results/result') do |element|   
+        REXML::Document.new(Net::HTTP.get(URI(url))).elements.each('message/results/result') do |element| 
+    
       
         recall_number = element.attributes['recallNo']
 
