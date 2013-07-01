@@ -117,10 +117,12 @@ describe Recall do
             recall_url: 'http://some.url.to/cpsc',
             manufacturers: %w(manufacturer1 manufacturer2),
             product_types: %w(product_type1 product_type2),
+            titles: nil,		
             descriptions: %w(description1 description2),
             upcs: %w(upc1 upc2),
             hazards: %w(hazard1 hazard2),
-            countries: %w(country1 country2) }
+            countries: %w(country1 country2),
+            images: nil }
       end
     end
 
