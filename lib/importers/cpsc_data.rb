@@ -23,19 +23,16 @@ module CpscData
           recall.recalled_on = Date.parse(element.attributes['recDate']) rescue nil
           recall_url = element.attributes['recallURL'].strip
           recall.url = get_cpsc_url(recall_number, URI(recall_url)) || recall_url
-          descrip = element.attributes['prname']
+          description = element.attributes['prname']
           
 # Search the CPSC RSS feed to see if recall url exists,  if so grab Title, Description, and Thumbnail link
           mtch = rss_doc.search "[text()*='#{recall.url}']"
           mtch_url = mtch.first
 
-           if defined? mtch_url
-              addtitle = mtch_url.parent.xpath("title").text
-              adddescription = mtch_url.parent.xpath("description").text 
-              addimage = "http://www.cpsc.gov" + mtch_url.parent.xpath('./group/content')[0]['url'] # must add domain prefix
-               if defined? adddescription
-                 descrip = adddescription
-              end
+            if mtch_url
+              title = mtch_url.parent.xpath("title").text
+              description = mtch_url.parent.xpath("description").text 
+              image = "http://www.cpsc.gov" + mtch_url.parent.xpath('./group/content')[0]['url'] # must add domain prefix
            end  
            
 
@@ -43,12 +40,12 @@ module CpscData
           attributes = {
               manufacturer: element.attributes['manufacturer'],
               product_type: element.attributes['type'],
-              description: descrip,
+              description: description,
               upc: element.attributes['UPC'],
               hazard: element.attributes['hazard'],
               country: element.attributes['country_mfg'],
-              title: addtitle,
-              image: addimage       
+              title: title,
+	      image: image      
           }
 
           Recall::CPSC_DETAIL_TYPES.each do |detail_type|
