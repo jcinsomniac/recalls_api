@@ -8,9 +8,18 @@ module CpscData
   def self.import_from_xml_feed(url)
     begin
 
+<<<<<<< HEAD
         REXML::Document.new(Net::HTTP.get(URI(url))).elements.each('message/results/result') do |element| 
     
+=======
+       cpsc_api = REXML::Document.new(Net::HTTP.get(URI(url)))
+>>>>>>> parent of be6df4e... Created get_rss_attributes
       
+        rss_url = "http://www.cpsc.gov/en/Newsroom/CPSC-RSS-Feed/Recalls-RSS/"
+        rss_doc = Nokogiri::XML(open(rss_url)).remove_namespaces!
+
+       
+       cpsc_api.elements.each('message/results/result') do |element|   
         recall_number = element.attributes['recallNo']
 
         Recall.transaction do
@@ -21,11 +30,16 @@ module CpscData
           recall.url = get_cpsc_url(recall_number, URI(recall_url)) || recall_url
           description = element.attributes['prname']
           
-          title, rssdescription, image = get_rss_attributes(recall.url)
+# Search the CPSC RSS feed to see if recall url exists,  if so grab Title, Description, and Thumbnail link
+          mtch = rss_doc.search "[text()*='#{recall.url}']"
+          mtch_url = mtch.first
 
-	      unless rssdescription.nil? 
-		description = rssdescription
-	      end          
+            if mtch_url
+              title = mtch_url.parent.xpath("title").text
+              description = mtch_url.parent.xpath("description").text 
+              image = "http://www.cpsc.gov" + mtch_url.parent.xpath('./group/content')[0]['url'] # must add domain prefix
+           end  
+           
 
 
           attributes = {
