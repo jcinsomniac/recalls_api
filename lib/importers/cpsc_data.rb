@@ -8,18 +8,12 @@ module CpscData
   def self.import_from_xml_feed(url)
     begin
 
-<<<<<<< HEAD
-        REXML::Document.new(Net::HTTP.get(URI(url))).elements.each('message/results/result') do |element| 
-    
-=======
-       cpsc_api = REXML::Document.new(Net::HTTP.get(URI(url)))
->>>>>>> parent of be6df4e... Created get_rss_attributes
-      
-        rss_url = "http://www.cpsc.gov/en/Newsroom/CPSC-RSS-Feed/Recalls-RSS/"
-        rss_doc = Nokogiri::XML(open(rss_url)).remove_namespaces!
 
-       
-       cpsc_api.elements.each('message/results/result') do |element|   
+        rss_url = "http://www.cpsc.gov/en/Newsroom/CPSC-RSS-Feed/Recalls-RSS/"
+        rss_doc = Nokogiri::XML(open(rss_url)).remove_namespaces!       
+
+     REXML::Document.new(Net::HTTP.get(URI(url))).elements.each('message/results/result') do |element| 
+     
         recall_number = element.attributes['recallNo']
 
         Recall.transaction do
